@@ -1,0 +1,169 @@
+﻿void InitCell()
+        {
+
+            for (int i = 0; i < 48; i++)
+            {
+                cell[i] = new Cell();
+                cell[i].ID = i;
+            }
+
+            // 1
+            cell[0].Left = 20;
+            cell[1].Left = 95;
+            cell[2].Left = 170;
+            cell[3].Left = 225;
+            cell[4].Left = 285;
+            cell[5].Left = 340;
+            cell[6].Left = 397;
+            cell[7].Left = 455;
+            cell[8].Left = 510;
+            cell[9].Left = 569;
+            cell[10].Left = 625;
+            cell[11].Left = 700;
+            cell[12].Left = 775;
+            for (int i = 0; i < 13; i++)
+                cell[i].Top = 20;
+
+            // 2
+            cell[13].Top = 170;
+            cell[14].Top = 225;
+            cell[15].Top = 285;
+            cell[16].Top = 340;
+            cell[17].Top = 397;
+            cell[18].Top = 455;
+            cell[19].Top = 510;
+            cell[20].Top = 569;
+            cell[21].Top = 625;
+            cell[22].Top = 700;
+            cell[23].Top = 775;
+            for (int i = 13; i < 24; i++)
+                cell[i].Left = 775;
+
+            // 3
+            cell[24].Left = 20;
+            cell[25].Left = 95;
+            cell[26].Left = 170;
+            cell[27].Left = 225;
+            cell[28].Left = 285;
+            cell[29].Left = 340;
+            cell[30].Left = 397;
+            cell[31].Left = 455;
+            cell[32].Left = 510;
+            cell[33].Left = 569;
+            cell[34].Left = 625;
+            for (int i = 24; i < 35; i++)
+                cell[i].Top = 20;
+
+            // 4
+            cell[35].Top = 170;
+            cell[36].Top = 225;
+            cell[37].Top = 285;
+            cell[38].Top = 340;
+            cell[39].Top = 397;
+            cell[40].Top = 455;
+            cell[41].Top = 510;
+            cell[42].Top = 569;
+            cell[43].Top = 625;
+            for (int i = 13; i < 24; i++)
+                cell[i].Left = 775;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+private void button_Click(object sender, RoutedEventArgs e)
+        {
+            int move = int.Parse(textBox.Text);
+            int newPos = postion + move;
+            if (newPos > 44)
+                newPos = newPos/44 + 1;
+            if (newPos == 0 || newPos == 12 || newPos == 23 || newPos == 34)
+                newPos++;
+                
+            int left = cell[postion].Left, top = cell[postion].Top;
+
+            if (postion < 12 && newPos > 12)
+            {
+                //newPos++;
+                Thread t2 = new Thread(() =>
+                {
+                    while (left <= cell[12].Left)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            Canvas.SetLeft(Cat, left + 1);
+                        });
+
+                        left++;
+                        Thread.Sleep(10);
+                    }
+
+                    while (top <= cell[newPos].Top)
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            Canvas.SetTop(Cat, top + 1);
+                        });
+
+                        top++;
+                        Thread.Sleep(10);
+                    }
+
+                    postion = newPos;
+                });
+                t2.IsBackground = true;
+                t2.Start();
+                return;
+            }
+
+
+            Thread t = new Thread(() =>
+            {
+                while (left <= cell[newPos].Left)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        Canvas.SetLeft(Cat, left + 1);
+                    });
+
+                    left++;
+                    Thread.Sleep(10);
+                }
+                postion = newPos;
+            });
+            t.IsBackground = true;
+            t.Start();
+           // t.Join();
+
+            //Thread t1 = new Thread(() =>
+            //{
+            //    while (top <= cell[newPos].Top)
+            //    {
+            //        Dispatcher.Invoke(() =>
+            //        {
+            //            Canvas.SetLeft(Cat, top + 1);
+            //        });
+
+            //        top++;
+            //        Thread.Sleep(10);
+            //    }
+            //    postion = newPos;
+            //});
+            //t1.IsBackground = true;
+            //t1.Start();
+        }
